@@ -1,5 +1,8 @@
 package arida.ufc.br.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Edge {
 	
 	private final Vertice source;
@@ -8,9 +11,12 @@ public class Edge {
 	
 	private String label;
 	
+	private final Set<Interval> intervals;
+	
 	public Edge(Vertice source, Vertice destiny) {
 		this.source = source;
-		this.destiny = destiny;		
+		this.destiny = destiny;	
+		this.intervals = new HashSet<Interval>();
 	}
 
 	public Vertice getSource() {
@@ -27,6 +33,14 @@ public class Edge {
 	
 	public void setLabel(String label) {
 		this.label = label;
+	}
+	
+	public Set<Interval> getIntervals() {
+		return intervals;
+	}
+	
+	public void addInterval(Interval interval) {
+		intervals.add(interval);
 	}
 	
 	public boolean equals(Edge edge) {
