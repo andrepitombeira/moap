@@ -1,13 +1,16 @@
 package arida.ufc.br.model;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import ac.essex.graphing.plotting.ContinuousFunctionPlotter;
 import ac.essex.graphing.plotting.Graph;
 import ac.essex.graphing.swing.GraphApplication;
 import arida.ufc.br.function.CostLinearFunction;
-import arida.ufc.br.function.EdgeContinuousFunctionPlotter;
 import arida.ufc.viewer.PlotCostLinearFunctionSetting;
 
 public class Edge {
@@ -57,9 +60,31 @@ public class Edge {
 		return false;
 	}
 	
+	public double getTimeTravel(double timeDeparture){
+		List<CostLinearFunction> listFunctions = new ArrayList<CostLinearFunction>(functions);
+		Collections.sort(listFunctions);
+		for(CostLinearFunction function : functions){
+			if (timeDeparture >= function.getxInitial() && (timeDeparture <= function.getxFinal())){
+				return function.calculate(timeDeparture);
+			}
+		}
+		return Double.MAX_VALUE;
+	}
+	
 	public void plotFunctions(PlotCostLinearFunctionSetting p){
 		Graph graph = new Graph(p); 
-		EdgeContinuousFunctionPlotter plotter = new EdgeContinuousFunctionPlotter("Edge: " + label, functions);
+		ContinuousFunctionPlotter plotter = new ContinuousFunctionPlotter() {
+			
+			@Override
+			public String getName() {
+				return source.getLabel()+"-"+destiny.getLabel();
+			}
+			
+			@Override
+			public double getY(double x) {
+				return getTimeTravel(x);
+			}
+		};
 		graph.functions.add(plotter);
 		new GraphApplication(graph);
 	}
