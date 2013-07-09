@@ -1,5 +1,7 @@
 package arida.ufc.br.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,5 +50,9 @@ public class Edge {
 			return true;
 		}
 		return false;
+	}
+	
+	public void plotIntervals(){
+		Collections.sort(new ArrayList<Interval>(intervals));
 	}
 }

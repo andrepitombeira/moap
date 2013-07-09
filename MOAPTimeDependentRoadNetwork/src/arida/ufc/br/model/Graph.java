@@ -9,9 +9,16 @@ public class Graph {
 	
 	protected final Set<Edge> edges;
 	
+	protected final Set<Interval> intervals;
+	
 	public Graph() {
 		this.vertices = new HashSet<Vertice>();
 		this.edges = new HashSet<Edge>();
+		this.intervals = new HashSet<Interval>();
+	}
+	
+	public void addInterval(Interval interval) {
+		intervals.add(interval);
 	}
 	
 	public void addVertice(Vertice vertice) {
