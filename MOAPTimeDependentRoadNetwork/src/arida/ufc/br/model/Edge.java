@@ -45,8 +45,9 @@ public class Edge {
 		this.label = label;
 	}
 	
-	public void addFunction(CostLinearFunction function) {
-		functions.add(function);
+	public void addFunction(CostLinearFunction ...function) {
+		for(CostLinearFunction f: function)
+			functions.add(f);
 	}
 	
 	public Set<CostLinearFunction> getFunctions() {
