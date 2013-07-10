@@ -1,9 +1,8 @@
-import java.awt.Color;
-
 import arida.ufc.br.function.CostLinearFunction;
 import arida.ufc.br.model.Edge;
+import arida.ufc.br.model.Graph;
 import arida.ufc.br.model.Vertice;
-import arida.ufc.viewer.PlotCostLinearFunctionSetting;
+import arida.ufc.viewer.GenerateGraphML;
 
 
 public class GraphTest {
@@ -11,9 +10,9 @@ public class GraphTest {
 	
 	public static void main(String[] args) {
 		Vertice vA, vB, vC;
-		vA = new Vertice(0,0);
-		vB = new Vertice(0,0);
-		vC = new Vertice(0,0);
+		vA = new Vertice(1,"A",0,0);
+		vB = new Vertice(2,"B",0,0);
+		vC = new Vertice(3,"C",0,0);
 		
 		Edge eAB, eBA, eBC, eAC, eCA, eCB;
 		eAB = new Edge(vA, vB);
@@ -61,14 +60,21 @@ public class GraphTest {
 		
 		eCB.addFunction(c1,c2,c3);
 		
-		PlotCostLinearFunctionSetting p = new PlotCostLinearFunctionSetting(0, 24, 14, 50, Color.red, "Função Temporal", 8, 5);
 		
-		eAB.plotFunctions(p);
-		eAC.plotFunctions(p);
-		eBA.plotFunctions(p);
-		eBC.plotFunctions(p);
-		eCA.plotFunctions(p);
-		eCB.plotFunctions(p);
+		Graph g = new Graph();
+		g.addVertice(vA, vB, vC);
+		g.addEdge(eAB,eAC,eBA,eBC,eCA,eCB);
+		g.addFunction(c1,c2,c3,c4,c5);
+		GenerateGraphML.generateGraphML(g, "c://tdg.graphml");
+		
+//		PlotCostLinearFunctionSetting p = new PlotCostLinearFunctionSetting(0, 24, 14, 50, Color.red, "Função Temporal", 8, 5);
+//		
+//		eAB.plotFunctions(p);
+//		eAC.plotFunctions(p);
+//		eBA.plotFunctions(p);
+//		eBC.plotFunctions(p);
+//		eCA.plotFunctions(p);
+//		eCB.plotFunctions(p);
 		
 		
 		

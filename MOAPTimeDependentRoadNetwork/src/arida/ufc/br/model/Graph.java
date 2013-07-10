@@ -7,6 +7,14 @@ import arida.ufc.br.function.CostLinearFunction;
 
 public class Graph {
 	
+	public Set<Vertice> getVertices() {
+		return vertices;
+	}
+
+	public Set<Edge> getEdges() {
+		return edges;
+	}
+
 	protected final Set<Vertice> vertices;
 	
 	protected final Set<Edge> edges;
@@ -19,17 +27,19 @@ public class Graph {
 		this.functions = new HashSet<CostLinearFunction>();
 	}
 	
-	public void addFunction(CostLinearFunction function) {
-		functions.add(function);
+	public void addFunction(CostLinearFunction ... function) {
+		for(CostLinearFunction f: function)
+			functions.add(f);
+	
 	}
 	
-	public void addVertice(Vertice vertice) {
-		vertices.add(vertice);
+	public void addVertice(Vertice ... vertice) {
+		for(Vertice v: vertice)
+			vertices.add(v);
 	}
 	
-	public void addEdge(Vertice source, Vertice destiny) {
-		Edge edge = new Edge(source, destiny);
-		source.addEdge(edge);
-		edges.add(edge);
+	public void addEdge(Edge ... edge) {
+		for(Edge e: edge)
+			edges.add(e);
 	}
 }

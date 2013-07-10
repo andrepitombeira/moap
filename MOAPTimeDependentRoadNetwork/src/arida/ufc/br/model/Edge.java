@@ -25,6 +25,7 @@ public class Edge {
 	
 	public Edge(Vertice source, Vertice destiny) {
 		this.source = source;
+		this.source.addEdge(this);
 		this.destiny = destiny;	
 		this.functions = new HashSet<CostLinearFunction>();
 	}
@@ -91,8 +92,8 @@ public class Edge {
 	}
 	
 	public static void main(String[] args) {
-		Vertice source = new Vertice(1, 2);
-		Vertice destiny = new Vertice(3, 4);
+		Vertice source = new Vertice(1,"A",1, 2);
+		Vertice destiny = new Vertice(2,"B",3, 4);
 		Edge e = new Edge(source, destiny);
 		e.addFunction(new CostLinearFunction(0,30,10,30,"f1"));
 		e.addFunction(new CostLinearFunction(10,30,14,40,"f2"));
