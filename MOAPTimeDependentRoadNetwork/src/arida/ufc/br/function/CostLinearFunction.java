@@ -5,24 +5,61 @@ import ac.essex.graphing.plotting.Graph;
 import ac.essex.graphing.swing.GraphApplication;
 import arida.ufc.viewer.PlotCostLinearFunctionSetting;
 
-public class CostLinearFunction {
+public class CostLinearFunction implements Comparable<CostLinearFunction>{
 	
 	private double coeficienteAngular;
 	
 	private double coeficienteLinear;
 	
+	private double xInitial;
+	
+	private double yInitial;
+	
+	private double xFinal;
+	
+	private double yFinal;
+	
 	private String name;
 	
-	
-	public CostLinearFunction(double coeficienteAngular,
-			double coeficienteLinear) {
+	public CostLinearFunction(double xInitial, double yInitial, double xFinal,
+			double yFinal, String name) {
 		super();
-		this.coeficienteAngular = coeficienteAngular;
-		this.coeficienteLinear = coeficienteLinear;
+		validate(xInitial, yInitial, xFinal,yFinal);
+		this.name = name;
+		this.xInitial = xInitial;
+		this.yInitial = yInitial;
+		this.xFinal = xFinal;
+		this.yFinal = yFinal;
+		coeficienteAngular = (double) (yFinal - yInitial) / (xFinal - xInitial);
+		coeficienteLinear = - coeficienteAngular * xInitial + yInitial;	
 	}
 
-	public CostLinearFunction(double x1, double y1, double x2, double y2){
-		generateFunction(x1, y1, x2, y2);
+	private void validate(double xInitial, double yInitial, double xFinal, double yFinal) {
+		if ((xInitial < 0) || (xFinal < 0) || (yInitial < 0) || (yFinal < 0))
+			throw new RuntimeException("Values of X and Y must be positives.");
+		if (xInitial >= xFinal) 
+			throw new RuntimeException("X initial must be lower than x final.");
+	}
+	
+	public double calculate(double input) {
+		return coeficienteAngular * input + coeficienteLinear;
+	}
+
+
+	public double getxInitial() {
+		return xInitial;
+	}
+
+	public double getyInitial() {
+		return yInitial;
+	}
+
+	public double getxFinal() {
+		return xFinal;
+	}
+
+	public double getyFinal() {
+		return yFinal;
 	}
 	
 	public String getName() {
@@ -33,20 +70,6 @@ public class CostLinearFunction {
 		this.name = name;
 	}
 
-	public double calculate(double input) {
-		return coeficienteAngular * input + coeficienteLinear;
-	}
-	
-	public void generateFunction(double x1, double y1,double x2, double y2) {
-		if(x1 != x2){
-			coeficienteAngular = deriveCoeficienteAngular(x1, x2, y1, y2);
-			coeficienteLinear = deriveCoeficienteLinear(x1, y1);	
-		}
-		else
-			throw new RuntimeException("Invalid points x1 = x2");
-			
-	}
-	
 	public double getCoeficienteAngular() {
 		return coeficienteAngular;
 	}
@@ -55,14 +78,6 @@ public class CostLinearFunction {
 		return coeficienteLinear;
 	}
 
-	private double deriveCoeficienteAngular(double x1, double x2, double y1, double y2) {
-		return (double) (y2 - y1) / (x2 - x1);
-	}
-	
-	private double deriveCoeficienteLinear(double x1, double y1) {
-		return -coeficienteAngular * x1 + y1;
-	}
-	
 	@Override
 	public String toString() {
 		return "Linear function: f(x) = " + coeficienteAngular + "* x + " + coeficienteLinear;
@@ -76,6 +91,14 @@ public class CostLinearFunction {
 		temp = Double.doubleToLongBits(coeficienteAngular);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(coeficienteLinear);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(xFinal);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(xInitial);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(yFinal);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(yInitial);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -95,13 +118,24 @@ public class CostLinearFunction {
 		if (Double.doubleToLongBits(coeficienteLinear) != Double
 				.doubleToLongBits(other.coeficienteLinear))
 			return false;
+		if (Double.doubleToLongBits(xFinal) != Double
+				.doubleToLongBits(other.xFinal))
+			return false;
+		if (Double.doubleToLongBits(xInitial) != Double
+				.doubleToLongBits(other.xInitial))
+			return false;
+		if (Double.doubleToLongBits(yFinal) != Double
+				.doubleToLongBits(other.yFinal))
+			return false;
+		if (Double.doubleToLongBits(yInitial) != Double
+				.doubleToLongBits(other.yInitial))
+			return false;
 		return true;
 	}
 
 	public Graph getGraph(PlotCostLinearFunctionSetting p){
 		Graph graph = new Graph(p); 
 		ContinuousFunctionPlotter plotter = new ContinuousFunctionPlotter() {
-			
 			@Override
 			public String getName() {
 				return name;
@@ -119,9 +153,9 @@ public class CostLinearFunction {
 	public void plot(PlotCostLinearFunctionSetting p){
 		new GraphApplication(getGraph(p));
 	}
-	
-	public static void main(String[] args) {
-		CostLinearFunction function = new CostLinearFunction(1,2,3,5);
-		System.out.println(function);
+
+	@Override
+	public int compareTo(CostLinearFunction o) {
+		return (int) (this.xInitial - o.xInitial);
 	}
 }

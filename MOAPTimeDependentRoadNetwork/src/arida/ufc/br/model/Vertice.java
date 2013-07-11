@@ -5,6 +5,8 @@ import java.util.Set;
 
 public class Vertice {
 
+	private long id;
+	
 	private double x;
 	
 	private double y;
@@ -13,7 +15,9 @@ public class Vertice {
 	
 	private final Set<Edge> edges;
 	
-	public Vertice(double x, double y) {
+	public Vertice(long id, String label, double x, double y) {
+		this.id = id;
+		this.label = label;
 		this.x = x;
 		this.y = y;
 		this.edges = new HashSet<Edge>();
@@ -21,6 +25,10 @@ public class Vertice {
 	
 	public void addEdge(Edge edge) {
 		edges.add(edge);
+	}
+	
+	public long getId() {
+		return id;
 	}
 	
 	public String getLabel() {

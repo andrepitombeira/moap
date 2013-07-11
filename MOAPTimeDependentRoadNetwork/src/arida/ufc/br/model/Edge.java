@@ -1,9 +1,17 @@
 package arida.ufc.br.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import ac.essex.graphing.plotting.ContinuousFunctionPlotter;
+import ac.essex.graphing.plotting.Graph;
+import ac.essex.graphing.swing.GraphApplication;
+import arida.ufc.br.function.CostLinearFunction;
+import arida.ufc.viewer.PlotCostLinearFunctionSetting;
 
 public class Edge {
 	
@@ -13,12 +21,13 @@ public class Edge {
 	
 	private String label;
 	
-	private final Set<Interval> intervals;
+	private final Set<CostLinearFunction> functions;
 	
 	public Edge(Vertice source, Vertice destiny) {
 		this.source = source;
+		this.source.addEdge(this);
 		this.destiny = destiny;	
-		this.intervals = new HashSet<Interval>();
+		this.functions = new HashSet<CostLinearFunction>();
 	}
 
 	public Vertice getSource() {
@@ -37,14 +46,15 @@ public class Edge {
 		this.label = label;
 	}
 	
-	public Set<Interval> getIntervals() {
-		return intervals;
+	public void addFunction(CostLinearFunction ...function) {
+		for(CostLinearFunction f: function)
+			functions.add(f);
 	}
 	
-	public void addInterval(Interval interval) {
-		intervals.add(interval);
+	public Set<CostLinearFunction> getFunctions() {
+		return functions;
 	}
-	
+
 	public boolean equals(Edge edge) {
 		if(edge.getSource().equals(this.getSource()) && edge.getDestiny().equals(this.getDestiny())) {
 			return true;
@@ -52,7 +62,45 @@ public class Edge {
 		return false;
 	}
 	
-	public void plotIntervals(){
-		Collections.sort(new ArrayList<Interval>(intervals));
+	public double getTimeTravel(double timeDeparture){
+		List<CostLinearFunction> listFunctions = new ArrayList<CostLinearFunction>(functions);
+		Collections.sort(listFunctions);
+		for(CostLinearFunction function : functions){
+			if (timeDeparture >= function.getxInitial() && (timeDeparture <= function.getxFinal())){
+				return function.calculate(timeDeparture);
+			}
+		}
+		return Double.MAX_VALUE;
+	}
+	
+	public void plotFunctions(PlotCostLinearFunctionSetting p){
+		Graph graph = new Graph(p); 
+		ContinuousFunctionPlotter plotter = new ContinuousFunctionPlotter() {
+			
+			@Override
+			public String getName() {
+				return source.getLabel()+"-"+destiny.getLabel();
+			}
+			
+			@Override
+			public double getY(double x) {
+				return getTimeTravel(x);
+			}
+		};
+		graph.functions.add(plotter);
+		new GraphApplication(graph);
+	}
+	
+	public static void main(String[] args) {
+		Vertice source = new Vertice(1,"A",1, 2);
+		Vertice destiny = new Vertice(2,"B",3, 4);
+		Edge e = new Edge(source, destiny);
+		e.addFunction(new CostLinearFunction(0,30,10,30,"f1"));
+		e.addFunction(new CostLinearFunction(10,30,14,40,"f2"));
+		e.addFunction(new CostLinearFunction(14,40,16,50,"f3"));
+		e.addFunction(new CostLinearFunction(16,50,20,50,"f4"));
+		e.addFunction(new CostLinearFunction(20,50,24,30,"f5"));
+		e.plotFunctions(new PlotCostLinearFunctionSetting(0, 24, 25, 55, Color.red, "Custo B,C", 5,5));
+		
 	}
 }
