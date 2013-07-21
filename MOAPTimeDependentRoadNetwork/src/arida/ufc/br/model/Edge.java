@@ -55,12 +55,6 @@ public class Edge {
 		return functions;
 	}
 
-	public boolean equals(Edge edge) {
-		if(edge.getSource().equals(this.getSource()) && edge.getDestiny().equals(this.getDestiny())) {
-			return true;
-		}
-		return false;
-	}
 	
 	public double getTimeTravel(double timeDeparture){
 		List<CostLinearFunction> listFunctions = new ArrayList<CostLinearFunction>(functions);
@@ -102,5 +96,36 @@ public class Edge {
 		e.addFunction(new CostLinearFunction(20,50,24,30,"f5"));
 		e.plotFunctions(new PlotCostLinearFunctionSetting(0, 24, 25, 55, Color.red, "Custo B,C", 5,5));
 		
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((destiny == null) ? 0 : destiny.hashCode());
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Edge other = (Edge) obj;
+		if (destiny == null) {
+			if (other.destiny != null)
+				return false;
+		} else if (!destiny.equals(other.destiny))
+			return false;
+		if (source == null) {
+			if (other.source != null)
+				return false;
+		} else if (!source.equals(other.source))
+			return false;
+		return true;
 	}
 }
