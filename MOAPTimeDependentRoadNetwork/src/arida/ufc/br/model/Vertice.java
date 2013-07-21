@@ -15,6 +15,12 @@ public class Vertice {
 	
 	private final Set<Edge> edges;
 	
+	private Vertice parent;
+	
+	public Vertice() {
+		this.edges = new HashSet<Edge>();
+	}
+	
 	public Vertice(long id, String label, double x, double y) {
 		this.id = id;
 		this.label = label;
@@ -45,6 +51,14 @@ public class Vertice {
 	
 	public double getY() {
 		return y;
+	}
+	
+	public Vertice getParent() {
+		return parent;
+	}
+
+	public void setParent(Vertice parent) {
+		this.parent = parent;
 	}
 	
 	public boolean equals(Vertice vertice) {
